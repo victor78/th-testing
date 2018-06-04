@@ -37,6 +37,10 @@
         }
     },
     "scripts": {
+
+        "post-update-cmd": [
+            "mkdir -p web/assets"
+        ],              
         "post-install-cmd": [
             "yii\\composer\\Installer::postInstall"
         ],
