@@ -130,7 +130,14 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return $user;
     }
     
-    
+    /**
+     * Sends money to other user
+     * 
+     * @param float $amount
+     * @param \app\models\User $receiver
+     * @return boolean
+     * @throws \Exception
+     */
     public function sendMoney($amount, User $receiver)
     {
         if ($receiver->id == $this->id) {
@@ -173,5 +180,23 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         }
         $this->balance = $curBalance;
         throw new \Exception('Not enough balance.');
+    }
+    
+    /**
+     * Generate an array with usernames of other users
+     * for ComboBox
+     * @return array
+     */
+    public function getOtherUsersArray()
+    {
+        $users = self::find()
+            ->where(['<>','id', $this->id])
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+        $items = array_map(function($item){
+            return $item['username'];
+        }, $users);
+        return $items;
     }
 }

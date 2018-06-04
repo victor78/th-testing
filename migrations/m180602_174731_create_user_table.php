@@ -22,11 +22,11 @@ class m180602_174731_create_user_table extends Migration
  
         $this->createIndex('idx-user-username', '{{%user}}', 'username');
         
-        $this->insert('{{%user}}', [
-            'username' => 'god',
-            'id' => 1,
-            'balance' => 9999,
-        ]);        
+//        $this->insert('{{%user}}', [
+//            'username' => 'god',
+//            'id' => 1,
+//            'balance' => 9999,
+//        ]);        
     }
  
     public function down()

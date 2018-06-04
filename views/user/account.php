@@ -26,22 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
     
-    
-    <?php 
-        $users = app\models\User::find()
-            ->where(['<>','id', $user->id])
-            ->indexBy('id')
-            ->asArray()
-            ->all();
-        $data = array_map(function($item){
-            return $item['username'];
-        }, $users);
-    ?>
    
     <p>
         <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model, 'username')->widget(iPaya\fuelUX\ComboBox::class, 
-            ['items' => $data]
+            ['items' => $user->getOtherUsersArray()]
         ) ?> 
         <?= $form->field($model, 'amount') ?>
    

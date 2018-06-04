@@ -32,7 +32,7 @@ class SendMoneyForm extends Model
             [['username'], 'exist', 'targetClass' => User::class,
                 'targetAttribute' => ['username' => 'username'],
                 'message'=> 'Such user does not exist!'],
-            [['amount'], 'number', 'min' => 1],
+            [['amount'], 'number', 'min' => 0.01],
         ];
     }
 

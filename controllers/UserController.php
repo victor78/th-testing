@@ -20,14 +20,24 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => [
+                    'account', 
                 ],
-            ],
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                        // everything else is denied
+                ],
+            ],  
         ];
     }
+
 
     /**
      * Lists all User models.
@@ -75,39 +85,39 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+//    /**
+//     * Updates an existing User model.
+//     * If update is successful, the browser will be redirected to the 'view' page.
+//     * @param integer $id
+//     * @return mixed
+//     * @throws NotFoundHttpException if the model cannot be found
+//     */
+//    public function actionUpdate($id)
+//    {
+//        $model = $this->findModel($id);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
+//
+//        return $this->render('update', [
+//            'model' => $model,
+//        ]);
+//    }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
+//    /**
+//     * Deletes an existing User model.
+//     * If deletion is successful, the browser will be redirected to the 'index' page.
+//     * @param integer $id
+//     * @return mixed
+//     * @throws NotFoundHttpException if the model cannot be found
+//     */
+//    public function actionDelete($id)
+//    {
+//        $this->findModel($id)->delete();
+//
+//        return $this->redirect(['index']);
+//    }
 
     /**
      * Finds the User model based on its primary key value.
@@ -130,24 +140,19 @@ class UserController extends Controller
         
         $user = Yii::$app->user->getIdentity();
         $model = new \app\models\SendMoneyForm();
-        if ($user) {
-            
-                        
-            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                
-                if ($model->send()) {
-                    Yii::$app->session->addFlash('success', 'The means were sent.');
-                    return $this->refresh();
-                } else {
-                    Yii::$app->session->addFlash('error', 'The means were not sent.');
-                }
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            if ($model->send()) {
+                Yii::$app->session->addFlash('success', 'The means were sent.');
+                return $this->refresh();
+            } else {
+                Yii::$app->session->addFlash('error', 'The means were not sent.');
             }
-            return $this->render('account', [
-                'user' => $user,
-                'model' => $model,
-                'dataProvider' => HistorySearch::getUserAccountProvider($user),
-            ]);
         }
-        return $this->redirect(['index']);
+        return $this->render('account', [
+            'user' => $user,
+            'model' => $model,
+            'dataProvider' => HistorySearch::getUserAccountProvider($user),
+        ]);
     }
 }
