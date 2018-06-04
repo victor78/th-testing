@@ -42,6 +42,7 @@
             "mkdir -p web/assets"
         ],              
         "post-install-cmd": [
+            "mkdir -p web/assets",
             "yii\\composer\\Installer::postInstall"
         ],
         "post-create-project-cmd": [
