@@ -26,13 +26,15 @@ class SendMoneyForm extends Model
     {
         return [
             [['username', 'amount'], 'required'],
-            [['username'], 'filter', 'filter' => 'trim'],
+            [['username', 'amount'], 'filter', 'filter' => 'trim'],
             [['username'], 'string', 'min' => 3, 'max' => 255],
             [['username'], 'match', 'pattern' => '#^[a-zA-Z]{1}[a-zA-Z0-9]+$#is'],
             [['username'], 'exist', 'targetClass' => User::class,
                 'targetAttribute' => ['username' => 'username'],
                 'message'=> 'Such user does not exist!'],
-            [['amount'], 'number', 'min' => 0.01],
+            [['amount'], 'number', 'min' => 0.01, 
+                'message' => 'Number must be more then 0.01 and must have discreteness to within a hundredth of a fraction.',
+                'numberPattern' => '/^[0-9]*\.?[0-9]{0,2}?$/'],
         ];
     }
 
